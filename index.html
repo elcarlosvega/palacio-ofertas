@@ -107,7 +107,7 @@ main{max-width:1200px;margin:0 auto;padding:26px 16px 70px}
 .tgband .btn{margin-left:auto}
 footer{border-top:1px solid var(--line);margin-top:30px}
 .foot{max-width:1200px;margin:0 auto;padding:20px 16px;font-size:.72rem;color:var(--mut);display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
-@media(max-width:760px){.navin{flex-wrap:wrap;gap:10px 12px}.brand{font-size:.95rem}.tgtop{margin-left:auto;padding:8px 12px;font-size:.8rem}.tabs{order:3;width:100%;flex-wrap:nowrap;overflow-x:auto;gap:2px}.tab{padding:6px 10px;white-space:nowrap}.tab.soon{display:none}.heroin{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}h1.tag{font-size:2rem}.metabar{align-items:flex-start}}
+@media(max-width:760px){.navin{flex-wrap:wrap;gap:10px 12px}.brand{font-size:.95rem}.tgtop{margin-left:auto;padding:8px 12px;font-size:.8rem}.tabs{order:3;flex:0 0 100%;flex-wrap:nowrap;overflow-x:auto;gap:2px}.tab{padding:6px 10px;white-space:nowrap}.tab.soon{display:none}.heroin{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}h1.tag{font-size:2rem}.metabar{align-items:flex-start}}
 </style>
 </head>
 <body>
@@ -131,6 +131,7 @@ footer{border-top:1px solid var(--line);margin-top:30px}
     </div>
     <div>
       <div class="metabar">
+        <span class="pill" id="onlinePill" style="display:none">🟢 <b id="online">1</b> en línea</span>
         <span class="pill">🕑 Actualizado <b id="upd">—</b></span>
         <span class="pill">↻ Barrido automático cada hora</span>
         <span class="pill">Página no oficial</span>
@@ -340,6 +341,10 @@ applyQuick('todo');
 if (DATA) boot();
 else fetch('deals.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{DATA=d;boot();})
   .catch(()=>{ $('upd').textContent='Aún no hay datos — el primer barrido corre pronto.'; });
+</script>
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<script>
+(function(){var STORE="palacio";var pill=document.getElementById("onlinePill"),out=document.getElementById("online");if(typeof mqtt==="undefined"||!pill)return;var peers={},myId=Math.random().toString(36).slice(2)+Date.now().toString(36);var topic="radarofertasmx/presence/"+STORE;function render(){var now=Date.now();peers[myId]=now;for(var k in peers){if(now-peers[k]>15000)delete peers[k];}out.textContent=Object.keys(peers).length;pill.style.display="";}try{var c=mqtt.connect("wss://broker.emqx.io:8084/mqtt",{connectTimeout:8000,reconnectPeriod:5000});c.on("connect",function(){c.subscribe(topic);c.publish(topic,myId);render();setInterval(function(){if(c.connected)c.publish(topic,myId);},5000);});c.on("message",function(tp,msg){peers[msg.toString()]=Date.now();render();});setInterval(render,3000);window.addEventListener("beforeunload",function(){try{c.end();}catch(e){}});}catch(e){}})();
 </script>
 </body>
 </html>
