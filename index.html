@@ -208,7 +208,7 @@ const deals = (DATA && DATA.deals) || [];
 const money = v => '$' + v.toLocaleString('es-MX', {maximumFractionDigits: Number.isInteger(v)?0:2});
 const now = Date.now();
 const genAt = DATA ? DATA.generated_at*1000 : now;
-const isNew = d => (genAt - d.first_seen*1000) < 864e5 || (now - d.first_seen*1000) < 864e5);
+const isNew = d => (genAt - d.first_seen*1000) < 864e5 || (now - d.first_seen*1000) < 864e5;
 const daysLeft = d => { if(!d.ends) return null; const ms = new Date(d.ends)-now; return Math.ceil(ms/864e5); };
 const score = d => d.pct * Math.log10(10 + d.amount);
 
@@ -254,7 +254,7 @@ function makeCard(d){
   body.append(cat,nm,pr,sv);
   const dl=daysLeft(d);
   if(dl!==null){ const v=document.createElement('div'); v.className='vig'+(dl<=2?' soon':'');
-    v.textContent = dl<=0?'Termina hoy': dl===1?'Termina mañana':'Vigente '+dl+' días más' body.appendChild(v); }
+    v.textContent = dl<=0?'Termina hoy': dl===1?'Termina mañana':'Vigente '+dl+' días más'; body.appendChild(v); }
   const a=document.createElement('a'); a.className='go'; a.href=d.url; a.target='_blank'; a.rel='noopener nofollow'; a.textContent='Ver oferta →';
   body.appendChild(a); card.appendChild(body);
   return card;
