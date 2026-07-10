@@ -339,7 +339,7 @@ $('verTop').addEventListener('click',()=>$('topSec').scrollIntoView({behavior:'s
 applyQuick('todo');
 }
 if (DATA) boot();
-else fetch('deals.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{DATA=d;boot();})
+else fetch('deals.json?_='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(d=>{DATA=d;boot();})
   .catch(()=>{ $('upd').textContent='Aún no hay datos — el primer barrido corre pronto.'; });
 </script>
 <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
